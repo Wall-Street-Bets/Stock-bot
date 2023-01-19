@@ -70,7 +70,7 @@ export default {
                     }
                 }
             });
-            await interaction.followUp(`You have bought ${quantity} shares of ${ticker} for a total of ${total.toPrecision(2)}`);
+            await interaction.followUp(`You have purchased ${quantity} shares of ${ticker} for a total of ${total.toPrecision(2)}. Your order will commence soon.`);
         }
     }
 }

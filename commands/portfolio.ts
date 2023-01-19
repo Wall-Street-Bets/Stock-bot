@@ -37,7 +37,7 @@ export default {
         let fields: any[] = await Promise.all(user.portfolio.map(async (stock) => {
             let amount = await getStock(stock.ticker);
             total += stock.amount * amount;
-            return { name: stock.amount + 'x ' + stock.ticker, value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` }
+            return { name: stock.ticker + ": " + stock.amount + 'x ' , value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` }
         }))
         nwCache[user.user_id] = user.balance + total;
         await interaction.followUp({
