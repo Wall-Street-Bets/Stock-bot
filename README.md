@@ -4,5 +4,5 @@
 
 > TODO
 - Pagination for all the news, portfolios, leaderboards, etc.
-- Optimization
+- Optimization & Debugging
 - Ideas
