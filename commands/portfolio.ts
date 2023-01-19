@@ -44,16 +44,14 @@ export default {
             embeds:
                 [
                     new EmbedBuilder()
-                        .setTitle(`Networth of ${(interaction.options.getUser('user') ?? interaction.user).username}`)
-                        .setDescription(`**Worth: ** ${(user.balance + total).toFixed(2)}$`)
+                        .setAuthor({name: `${(interaction.options.getUser('user') ?? interaction.user).username}'s Portfolio`})
+                        .setTitle(`Account Value`)
+                        .setDescription(`${(user.balance + total).toFixed(2)}$`)
+                        .addFields({ name: 'Cash', value: `${(user.balance).toFixed(2)}$`})
                         .addFields(...fields)
                         .setColor("LuminousVividPink")
                 ]
         })
-
-
-
-
     }
 
 };

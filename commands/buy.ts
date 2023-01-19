@@ -38,6 +38,7 @@ export default {
             });
         }
         let total = await getStock(ticker) * quantity;
+        console.log(total)
         if (user.balance < total) {
             await interaction.followUp({ content: 'You do not have enough money to buy this stock', ephemeral: true });
         }
