@@ -10,19 +10,25 @@ export default {
             .setName('ticker')
             .setDescription('The ticker to check prices of')
             .setRequired(true)),
-    async execute(interaction : ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const ticker = interaction.options.getString('ticker');
-        const data = await getData(`https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=1&apiKey=sCYUVFaYLzKQGvIbKz2DtLFtGd08ECKp`);
+        const data = await getData(`https://api.polygon.io/v2/reference/news?ticker=${ticker}&limit=25&apiKey=${process.env.API_KEY}`);
+        var fields = (data.results as any[]).map((val) => ({
+            name: val.title,
+            value: `${val.description.slice(0, 100).replace("\n","") + ((val.description as string).length > 100 ? "..." : "")}\n\n**Created At**: <t:${Math.ceil(new Date(val.published_utc).getTime()/1000)}>\n[**Website**](${val.article_url})`,
+            inline: true
+        }));
+        while (fields.map((val)=>val.name.length+val.value.length).reduce((a,b)=>a+b)>6000){
+            fields.pop();
+        }
         await interaction.reply(
-            {embeds : [ new EmbedBuilder()
-            .addFields(...Object.entries(data.results).map(([k , v] : [k : string, v : any]) => (
-                { name: k.toUpperCase(), 
-                    value: v
-                }
-                )))
-            .setTitle(`${ticker} news`)
-            .setColor('Aqua')
-            ]}
+            {
+                embeds: [new EmbedBuilder()
+                    .addFields(...fields)
+                    .setTitle(`${ticker} News`)
+                    .setColor('Aqua')
+                ]
+            }
         );
     }
 };

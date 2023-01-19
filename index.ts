@@ -10,6 +10,7 @@ import path from 'node:path';
 import { prisma } from "./utils";
 import { createInterface } from "node:readline";
 import { exit } from "node:process";
+
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -56,13 +57,7 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        try {
             await interaction[interaction.replied ? 'followUp' : 'reply']({ content: 'There was an error while executing this command!', ephemeral: true })
-        }
-        catch {
-            console.error("Already another instance running! Exiting!")
-            exit(1);
-        }
     }
 });
 
