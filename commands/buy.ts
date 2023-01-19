@@ -1,11 +1,11 @@
-//create a sell command for users using prisma
+//setup a buy command for user using prisma
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { getData } from '../utils';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 export const data = new SlashCommandBuilder()
-    .setName('sell')
-    .setDescription('Sell a stock')
+    .setName('buy')
+    .setDescription('Buy a stock')
     .addStringOption(option =>
         option.setName('ticker')
             .setDescription('The ticker of the stock')
@@ -14,6 +14,7 @@ export const data = new SlashCommandBuilder()
         option.setName('quantity')
             .setDescription('The quantity of the stock')
             .setRequired(true))
+
 export async function execute(interaction: ChatInputCommandInteraction) {
     let ticker = interaction.options.getString('ticker');
     let quantity = interaction.options.getInteger('quantity');
@@ -25,13 +26,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             id: interaction.user.id
         }
     });
-    let stock = await prisma.stock.findUnique({
-        where: {
-            id: interaction.user.id
-        }
-    });
-    if (stock.amount < quantity) {
-        await interaction.reply({ content: 'You do not have enough shares to sell', ephemeral: true });
+    if (user.balance < total) {
+        await interaction.reply({ content: 'You do not have enough money to buy this stock', ephemeral: true });
     }
     else {
         await prisma.user.update({
@@ -39,17 +35,21 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 id: interaction.user.id
             },
             data: {
-                balance: user.balance + total
+                balance: user.balance - total
             }
         });
-        await prisma.stock.update({
-            where: {
-                id: interaction.user.id
-            },
+        await prisma.stock.create({
             data: {
-                amount: stock.amount - quantity
+                ticker: ticker,
+                quantity: quantity,
+                price: price,
+                user: {
+                    connect: {
+                        id: interaction.user.id
+                    }
+                }
             }
         });
-        await interaction.reply({ content: `You have sold ${quantity} shares of ${ticker} for a total of ${total}`, ephemeral: true });
+        await interaction.reply({ content: `You have bought ${quantity} shares of ${ticker} for a total of ${total}`, ephemeral: true });
     }
 }
