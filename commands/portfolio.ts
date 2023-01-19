@@ -1,44 +1,58 @@
+import { nwCache } from './../utils';
 
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { cache, prisma, getData } from "../utils";
+import { cache, prisma, getData, getStock } from "../utils";
 
 export default {
     data: new SlashCommandBuilder()
         .setName('portfolio')
-        .setDescription('Check your portfolio!'),
-    async execute(interaction : ChatInputCommandInteraction) {
+        .setDescription('Check your portfolio!')
+        .addUserOption((option)=>option
+            .setName("user")
+            .setDescription("The user who's portfolio you're checking")
+            .setRequired(false)),
+    async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply();
-        try {
-        const user = await prisma.user.findUnique({where : {user_id : Number.parseInt(interaction.user.id)}, include: {
-            portfolio: true
-        }})
-        if (!user){
-            throw new Error();
-        } 
-        let total = 0.0;
-        let fields= [];
-        console.log(user.portfolio);
-        for (let stock of user.portfolio){
-            let amount;
-            if (cache[stock.ticker] && cache[stock.ticker].lastUpdated - new Date().getTime() < 300000) {
-                amount = cache[stock.ticker].value;
-            } else {
-                let b = (await getData(`https://api.polygon.io/v2/aggs/ticker/${stock.ticker}/prev?apiKey=${process.env.API_KEY}`));
-                
-                amount = b.results[0]['c'];
-                cache[stock.ticker] = { lastUpdated: new Date().getTime(), value: amount };
+
+        const user = await prisma.user.findUnique({
+            where: {
+                user_id: (interaction.options.getUser('user') ?? interaction.user).id
+            },
+            include: {
+                portfolio: true
             }
-            total += stock.amount * amount;
-            fields.push({ name: stock.amount + 'x ' + stock.ticker, value: `**Worth:** ${amount * stock.amount}` });
-        };
-        await interaction.followUp({embeds: [new EmbedBuilder().setTitle("Networth of "+interaction.user.username).setDescription("**Worth: **"+(user.balance + total)).addFields(...fields)]})
-        } catch (e){
-            console.log(e);
-            await interaction.followUp({embeds: [(new EmbedBuilder()).setTitle("Account Not Found!").setDescription("Try </start:1065290080538873972> first before viewing your portfolio!").setColor('Red')]})
+        })
+        if (!user) {
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Account Not Found!")
+                        .setDescription("Try </start:1065290080538873972> first before viewing your portfolio!")
+                        .setColor('Red')
+                ]
+            });
         }
-        
-        
-        
+
+        let total = 0.0;
+        let fields: any[] = await Promise.all(user.portfolio.map(async (stock) => {
+            let amount = await getStock(stock.ticker);
+            total += stock.amount * amount;
+            return { name: stock.amount + 'x ' + stock.ticker, value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` }
+        }))
+        nwCache[user.user_id] = user.balance + total;
+        await interaction.followUp({
+            embeds:
+                [
+                    new EmbedBuilder()
+                        .setTitle(`Networth of ${(interaction.options.getUser('user') ?? interaction.user).username}`)
+                        .setDescription(`**Worth: ** ${(user.balance + total).toFixed(2)}$`)
+                        .addFields(...fields)
+                        .setColor("LuminousVividPink")
+                ]
+        })
+
+
+
 
     }
 

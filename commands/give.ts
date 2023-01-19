@@ -8,33 +8,27 @@ export default {
 
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply();
-        let user;
-        try {
-            user = await prisma.user.findUnique({
-                where: { user_id: Number.parseInt(interaction.user.id) }, include: {
-                    portfolio: true
-                }
-            })
-            if (!user) {
-                throw new Error();
+        let user = await prisma.user.findUnique({
+            where: { user_id: interaction.user.id }, include: {
+                portfolio: true
             }
-        } catch (e) {
-            await interaction.followUp({ embeds: [(new EmbedBuilder()).setTitle("Account Not Found!").setDescription("Try </start:1065290080538873972> first before viewing your portfolio!").setColor('Red')] })
-            return;
+        })
+        if (!user) {
+            return await interaction.followUp({ embeds: [(new EmbedBuilder()).setTitle("Account Not Found!").setDescription("Try </start:1065290080538873972> first before viewing your portfolio!").setColor('Red')] })
         }
-        if (user.portfolio.filter((val) => val.ticker == interaction.options.getString('ticker').toUpperCase()).length > 0) {
+        if (user.portfolio.filter((val) => val.ticker == interaction.options.getString('ticker')?.toUpperCase()).length > 0) {
             await prisma.user.update({
                 where: {
-                    user_id: Number.parseInt(interaction.user.id)
+                    user_id: interaction.user.id
                 },
                 data: {
                     portfolio: {
-                        update: {
+                        updateMany: {
                             where: {
-                                ticker: interaction.options.getString('ticker').toUpperCase()
+                                ticker: interaction.options.getString('ticker')?.toUpperCase() as string
                             },
                             data: {
-                                amount: interaction.options.getInteger('amount')
+                                amount: interaction.options.getInteger('amount') as number
                             }
                         }
                     }
@@ -44,13 +38,13 @@ export default {
         } else {
             await prisma.user.update({
                 where: {
-                    user_id: Number.parseInt(interaction.user.id)
+                    user_id: interaction.user.id
                 },
                 data: {
                     portfolio: {
                         create: [{
-                            ticker: interaction.options.getString('ticker').toUpperCase(),
-                            amount: interaction.options.getInteger('amount')
+                            ticker: interaction.options.getString('ticker')?.toUpperCase() as string,
+                            amount: interaction.options.getInteger('amount') as number
                         }]
                     }
                 }
