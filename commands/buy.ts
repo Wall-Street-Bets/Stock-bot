@@ -39,6 +39,8 @@ export default {
         }
         let total = await getStock(ticker) * quantity;
         console.log(total)
+
+        //TODO: what if the ticker doesn't exist?
         if (user.balance < total) {
             await interaction.followUp({ content: 'You do not have enough money to buy this stock', ephemeral: true });
         }

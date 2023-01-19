@@ -40,6 +40,7 @@ export default {
             return { name: stock.ticker + ": " + stock.amount + 'x ' , value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` }
         }))
         nwCache[user.user_id] = user.balance + total;
+        //TODO: maybe add the change of owned stock prices
         await interaction.followUp({
             embeds:
                 [
