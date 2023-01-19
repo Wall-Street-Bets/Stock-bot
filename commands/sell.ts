@@ -1,55 +1,69 @@
 //create a sell command for users using prisma
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { getData } from '../utils';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-export const data = new SlashCommandBuilder()
-    .setName('sell')
-    .setDescription('Sell a stock')
-    .addStringOption(option =>
-        option.setName('ticker')
-            .setDescription('The ticker of the stock')
-            .setRequired(true))
-    .addIntegerOption(option =>
-        option.setName('quantity')
-            .setDescription('The quantity of the stock')
-            .setRequired(true))
-export async function execute(interaction: ChatInputCommandInteraction) {
-    let ticker = interaction.options.getString('ticker');
-    let quantity = interaction.options.getInteger('quantity');
-    let price = await getData(`https://api.polygon.io/v2/aggs/ticker/${ticker}/prev?apiKey=${process.env.API_KEY}`);
-    price = price.results[0]['c'];
-    let total = price * quantity;
-    let user = await prisma.user.findUnique({
-        where: {
-            id: interaction.user.id
-        }
-    });
-    let stock = await prisma.stock.findUnique({
-        where: {
-            id: interaction.user.id
-        }
-    });
-    if (stock.amount < quantity) {
-        await interaction.reply({ content: 'You do not have enough shares to sell', ephemeral: true });
-    }
-    else {
-        await prisma.user.update({
+import { getStock, prisma } from '../utils';
+export default {
+    data: new SlashCommandBuilder()
+        .setName('sell')
+        .setDescription('Sell a stock')
+        .addStringOption(option =>
+            option.setName('ticker')
+                .setDescription('The ticker of the stock')
+                .setRequired(true))
+        .addIntegerOption(option =>
+            option.setName('quantity')
+                .setDescription('The quantity of the stock')
+                .setRequired(true)),
+    async execute(interaction: ChatInputCommandInteraction) {
+        await interaction.deferReply();
+        let ticker = interaction.options.getString('ticker');
+        let quantity = interaction.options.getInteger('quantity');
+       
+        let user = await prisma.user.findUnique({
             where: {
-                id: interaction.user.id
+                user_id: interaction.user.id
             },
-            data: {
-                balance: user.balance + total
+            include : {
+                portfolio : true
             }
         });
-        await prisma.stock.update({
-            where: {
-                id: interaction.user.id
-            },
-            data: {
-                amount: stock.amount - quantity
-            }
-        });
-        await interaction.reply({ content: `You have sold ${quantity} shares of ${ticker} for a total of ${total}`, ephemeral: true });
+        if (!user) {
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Account Not Found!")
+                        .setDescription("Try </start:1065504662729531415> first before viewing your portfolio!")
+                        .setColor('Red')
+                ]
+            });
+        }
+        let stock = user.portfolio.filter((val)=>val.ticker == ticker.toUpperCase());
+        if (!stock || stock[0].amount < quantity) {
+            await interaction.followUp({ content: 'You do not have enough shares to sell', ephemeral: true });
+        } else {
+            let total = await getStock(ticker) * quantity;
+            await prisma.user.update({
+                where: {
+                    user_id: interaction.user.id
+                },
+                data: {
+                    balance: {
+                        decrement : total
+                    },
+                    portfolio: {
+                        updateMany: {
+                            where : {
+                                ticker
+                            },
+                            data : {
+                                amount : {
+                                    decrement : quantity
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            await interaction.followUp(`You have sold ${quantity} shares of ${ticker} for a total of ${total.toPrecision(2)}`);
+        }
     }
 }

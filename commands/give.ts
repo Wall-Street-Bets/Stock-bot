@@ -14,7 +14,7 @@ export default {
             }
         })
         if (!user) {
-            return await interaction.followUp({ embeds: [(new EmbedBuilder()).setTitle("Account Not Found!").setDescription("Try </start:1065290080538873972> first before viewing your portfolio!").setColor('Red')] })
+            return await interaction.followUp({ embeds: [(new EmbedBuilder()).setTitle("Account Not Found!").setDescription("Try </start:1065504662729531415> first before viewing your portfolio!").setColor('Red')] })
         }
         if (user.portfolio.filter((val) => val.ticker == interaction.options.getString('ticker')?.toUpperCase()).length > 0) {
             await prisma.user.update({

@@ -27,7 +27,7 @@ export default {
                 embeds: [
                     new EmbedBuilder()
                         .setTitle("Account Not Found!")
-                        .setDescription("Try </start:1065290080538873972> first before viewing your portfolio!")
+                        .setDescription("Try </start:1065504662729531415> first before viewing your portfolio!")
                         .setColor('Red')
                 ]
             });
