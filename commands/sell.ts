@@ -1,55 +1,55 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { prisma } from "../utils";
-
-export default {
-    data: new SlashCommandBuilder()
-        .setName('sell')
-        .setDescription('Sell your stocks to gain cash!')
-        .addStringOption(option => option
-            .setName('ticker')
-            .setDescription("The type of stonks")
+//create a sell command for users using prisma
+import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { getData } from '../utils';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+export const data = new SlashCommandBuilder()
+    .setName('sell')
+    .setDescription('Sell a stock')
+    .addStringOption(option =>
+        option.setName('ticker')
+            .setDescription('The ticker of the stock')
             .setRequired(true))
-        .addIntegerOption(option => option
-            .setName('amount')
-            .setDescription("The amount of stonks")
-            .setRequired(true)),
-
-    async execute(interaction: ChatInputCommandInteraction) {
-        await interaction.deferReply();
-        let user = await prisma.user.findUnique({
-            where: { user_id: interaction.user.id }, include: {
-                portfolio: true
-            }
-        })
-        if (!user) {
-            return await interaction.followUp({ embeds: [(new EmbedBuilder()).setTitle("Account Not Found!").setDescription("Try </start:1065290080538873972> first before viewing your portfolio!").setColor('Red')] })
+    .addIntegerOption(option =>
+        option.setName('quantity')
+            .setDescription('The quantity of the stock')
+            .setRequired(true))
+export async function execute(interaction: ChatInputCommandInteraction) {
+    let ticker = interaction.options.getString('ticker');
+    let quantity = interaction.options.getInteger('quantity');
+    let price = await getData(`https://api.polygon.io/v2/aggs/ticker/${ticker}/prev?apiKey=${process.env.API_KEY}`);
+    price = price.results[0]['c'];
+    let total = price * quantity;
+    let user = await prisma.user.findUnique({
+        where: {
+            id: interaction.user.id
         }
-        if (user.portfolio.filter((val) => val.ticker == interaction.options.getString('ticker')?.toUpperCase()).length == 0) {
-            
+    });
+    let stock = await prisma.stock.findUnique({
+        where: {
+            id: interaction.user.id
         }
+    });
+    if (stock.quantity < quantity) {
+        await interaction.reply({ content: 'You do not have enough shares to sell', ephemeral: true });
+    }
+    else {
         await prisma.user.update({
             where: {
-                user_id: interaction.user.id
+                id: interaction.user.id
             },
             data: {
-                portfolio: {
-                    updateMany: {
-                        where: {
-                            ticker: interaction.options.getString('ticker')?.toUpperCase() as string
-                        },
-                        data: {
-                            amount: interaction.options.getInteger('amount') as number
-                        }
-                    }
-                }
+                balance: user.balance + total
             }
-        })
-        await interaction.followUp("Done ;)")
-
-
-
-
-
+        });
+        await prisma.stock.update({
+            where: {
+                id: interaction.user.id
+            },
+            data: {
+                quantity: stock.quantity - quantity
+            }
+        });
+        await interaction.reply({ content: `You have sold ${quantity} shares of ${ticker} for a total of ${total}`, ephemeral: true });
     }
-
-};
+}
