@@ -41,8 +41,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         await prisma.stock.create({
             data: {
                 ticker: ticker,
-                quantity: quantity,
-                price: price,
+                amount: quantity,
                 user: {
                     connect: {
                         id: interaction.user.id
