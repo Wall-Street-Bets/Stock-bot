@@ -65,7 +65,7 @@ client.once(Events.ClientReady, c => {
     console.log(`Tag: ${c.user.tag}`);
     console.log(`ID: ${c.user.id}`);
     
-    
+    readline.question(`>`, q);
 })
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN as string);
@@ -83,21 +83,21 @@ try {
 function q(command : string){
     if (command.toLowerCase().startsWith("exit"))
         exit(0);
-    console.log(JSON.stringify(command.split(' ', 3)));
+    
     var a = command.split(' ', 3)[0];
     var b = command.split(' ', 3)[1];
     var c = command.split(' ', 3)[2];
     
-    prisma[b][a](JSON.parse(c)).then(console.log).catch(console.error);
+    prisma[b][a](JSON.parse(c)).then((val)=>{console.log(val);readline.question('>', q);}).catch(console.error);
     
         
         
 
-    readline.question('>', q);
+    
 }
 const readline = createInterface({
     input: process.stdin,
     output: process.stdout,
   })
-readline.question(`>`, q);
+
 client.login(process.env.TOKEN);
