@@ -7,12 +7,12 @@ export default {
     async execute(interaction : ChatInputCommandInteraction) {
         await interaction.deferReply();
         try {
-        const user = await prisma.user.findUnique({where : {user_id : Number.parseInt(interaction.user.id)}})
-        if (user){
-            await interaction.followUp("You've already claimed this!");
-            return;
-        } 
-        throw new Error()
+            const user = await prisma.user.findUnique({where : {user_id : Number.parseInt(interaction.user.id)}})
+            if (user){
+                await interaction.followUp("You've already claimed an account!");
+                return;
+            } 
+            throw new Error()
         } catch (e){
             console.error(e);
             await prisma.user.create({

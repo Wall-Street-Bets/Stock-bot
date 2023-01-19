@@ -24,6 +24,6 @@ model User {
   user_id BigInt @unique
   createdAt DateTime @default(now())
   editedAt DateTime @updatedAt
-  balance Float @default(1000)
+  balance Float @default(5000)
   portfolio Stock[] 
 }
