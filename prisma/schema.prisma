@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Stock {
+  ticker String @id @map("_id")
+  createdAt DateTime @default(now())
+  editedAt DateTime @updatedAt
+  amount Int
+  user User @relation(references: [id], fields: [userId])
+  userId String
+}
+
+model User {
+  id String @default(uuid()) @id @map("_id")
+  user_id BigInt @unique
+  createdAt DateTime @default(now())
+  editedAt DateTime @updatedAt
+  balance Float @default(1000)
+  portfolio Stock[] 
+}
