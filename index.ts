@@ -56,7 +56,13 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        await interaction[interaction.replied ? 'followUp' : 'reply']({ content: 'There was an error while executing this command!', ephemeral: true })
+        try {
+            await interaction[interaction.replied ? 'followUp' : 'reply']({ content: 'There was an error while executing this command!', ephemeral: true })
+        }
+        catch {
+            console.error("Already another instance running! Exiting!")
+            exit(1);
+        }
     }
 });
 
@@ -83,13 +89,16 @@ try {
 function q(command : string){
     if (command.toLowerCase().startsWith("exit"))
         exit(0);
-    
+    try {
     var a = command.split(' ', 3)[0];
     var b = command.split(' ', 3)[1];
     var c = command.split(' ', 3)[2];
     
     prisma[b][a](JSON.parse(c)).then((val)=>{console.log(val);readline.question('>', q);}).catch(console.error);
-    
+    } catch (e){
+        console.error(e);
+        readline.question('>', q);
+    }
         
         
 
