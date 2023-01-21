@@ -34,10 +34,12 @@ export default {
         }
 
         let total = 0.0;
-        let fields: any[] = await Promise.all(user.portfolio.map(async (stock) => {
-            let amount = await getStock(stock.ticker);
-            total += stock.amount * amount;
-            return { name: stock.ticker + ": " + stock.amount + 'x ' , value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` }
+        let fields: any[] = await Promise.all(
+                user.portfolio.map(async (stock) => {
+                let amount = await getStock(stock.ticker);
+                total += stock.amount * amount;
+                return { name: stock.ticker + ": " + stock.amount + 'x ' , value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` 
+            }
         }))
         nwCache[user.user_id] = user.balance + total;
         //TODO: maybe add the change of owned stock prices
