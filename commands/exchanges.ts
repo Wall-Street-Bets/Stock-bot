@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { getData } from '../utils';
+import { getData } from '../utils/utils';
 
 
 var data = (await getData(`https://api.polygon.io/v3/reference/exchanges?asset_class=stocks&apiKey=${process.env.API_KEY}`)).results.map((val: { name: string }) => ({ ...val, name: val.name.slice(0, 32).replace(',', '').replace('.', '') }));

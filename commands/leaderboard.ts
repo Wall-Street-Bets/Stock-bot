@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { nwCache } from './../utils';
+import { nwCache } from '../utils/utils';
 import { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommandBuilder } from 'discord.js';
 export default {

@@ -1,6 +1,6 @@
 //setup a buy command for user using prisma
+import { getStock, prisma } from '../utils/utils';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { getStock, prisma } from '../utils';
 export default {
     data: new SlashCommandBuilder()
         .setName('buy')

@@ -1,6 +1,6 @@
 //create a sell command for users using prisma
 import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { getStock, prisma } from '../utils';
+import { getStock, prisma } from '../utils/utils';
 export default {
     data: new SlashCommandBuilder()
         .setName('sell')

@@ -3,7 +3,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "utils",
     "target": "es2017",
     "allowSyntheticDefaultImports": true
   },

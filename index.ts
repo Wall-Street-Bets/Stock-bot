@@ -7,7 +7,7 @@ import { config } from "dotenv";
 config();
 import fs from 'node:fs';
 import path from 'node:path';
-import { prisma } from "./utils";
+import { prisma } from "./utils/utils";
 import { createInterface } from "node:readline";
 import { exit } from "node:process";
 
