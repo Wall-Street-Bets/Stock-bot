@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import { randomUUID } from "crypto";
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-=======
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
->>>>>>> 1e0949dd4a8b7af41a21f81f1581d73f3d181e96
 import { getData } from "../utils";
 
 export default {
