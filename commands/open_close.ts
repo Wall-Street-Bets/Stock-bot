@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { randomUUID } from "crypto";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+=======
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+>>>>>>> 1e0949dd4a8b7af41a21f81f1581d73f3d181e96
 import { getData } from "../utils";
 
 export default {
@@ -12,16 +16,16 @@ export default {
             .setRequired(true))
         .addStringOption(option => option
             .setName('date')
-            .setDescription('The date to query the data from')
-            .setRequired(false)),
-    async execute(interaction: ChatInputCommandInteraction) {
-        await interaction.deferReply();
+            .setDescription('The date for the stock info (yyyy-mm-dd) eg.2023-01-18')
+            .setRequired(true)),
+    async execute(interaction : ChatInputCommandInteraction) {
+        await interaction.deferReply()
         const ticker = interaction.options.getString('ticker')
         var date1 = new Date();
-        date1.setTime(date1.getTime() - 86400000);
-        const date = new Date((interaction.options.getString('date') ?? date1));
-        if (date.getTime() > date1.getTime()) {
-            return await interaction.followUp("We're not a fortune teller, go to hell (P.S. you can only get yesterday's or older's stock prices, so well suck it)\n\nCustomer satisfaction on top");
+        date1.setTime(date1.getTime()-1000*86400);
+        const date = new Date((interaction.options.getString('date')));
+        if (date.getTime() > date1.getTime()){
+            return await interaction.reply("We're not a fortune teller, go to hell (P.S. you can only get yesterday's or older's stock prices, so well suck it)\n\nCustomer satisfaction on top");
         }
         let data = await getData(`https://api.polygon.io/v1/open-close/${ticker}/${date.toISOString().split('T')[0]}?adjusted=true&apiKey=${process.env.API_KEY}`);
         let components = [new ActionRowBuilder<ButtonBuilder>()

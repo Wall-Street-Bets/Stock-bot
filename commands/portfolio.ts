@@ -34,26 +34,27 @@ export default {
         }
 
         let total = 0.0;
-        let fields: any[] = await Promise.all(user.portfolio.map(async (stock) => {
-            let amount = await getStock(stock.ticker);
-            total += stock.amount * amount;
-            return { name: stock.amount + 'x ' + stock.ticker, value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` }
+        let fields: any[] = await Promise.all(
+                user.portfolio.map(async (stock) => {
+                let amount = await getStock(stock.ticker);
+                total += stock.amount * amount;
+                return { name: stock.ticker + ": " + stock.amount + 'x ' , value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` 
+            }
         }))
         nwCache[user.user_id] = user.balance + total;
+        //TODO: maybe add the change of owned stock prices
         await interaction.followUp({
             embeds:
                 [
                     new EmbedBuilder()
-                        .setTitle(`Networth of ${(interaction.options.getUser('user') ?? interaction.user).username}`)
-                        .setDescription(`**Worth: ** ${(user.balance + total).toFixed(2)}$`)
+                        .setAuthor({name: `${(interaction.options.getUser('user') ?? interaction.user).username}'s Portfolio`})
+                        .setTitle(`Account Value`)
+                        .setDescription(`${(user.balance + total).toFixed(2)}$`)
+                        .addFields({ name: 'Cash', value: `${(user.balance).toFixed(2)}$`})
                         .addFields(...fields)
                         .setColor("LuminousVividPink")
                 ]
         })
-
-
-
-
     }
 
 };

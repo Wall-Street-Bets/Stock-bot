@@ -38,6 +38,16 @@ export default {
             });
         }
         let total = await getStock(ticker) * quantity;
+        if (total == 0){
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Is the stock real?")
+                        .setDescription("Check that the stock is real or if the quantity is 0!")
+                        .setColor('Red')
+                ]
+            });
+        }
         if (user.balance < total) {
             await interaction.followUp({ content: 'You do not have enough money to buy this stock', ephemeral: true });
         }
@@ -69,7 +79,7 @@ export default {
                     }
                 }
             });
-            await interaction.followUp(`You have bought ${quantity} shares of ${ticker} for a total of ${total.toFixed(2)}`);
+            await interaction.followUp(`You have purchased ${quantity} shares of ${ticker} for a total of ${total.toFixed(2)}. Your order will commence soon.`);
         }
     }
 }

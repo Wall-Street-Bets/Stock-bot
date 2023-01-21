@@ -47,7 +47,7 @@ export default {
                 },
                 data: {
                     balance: {
-                        decrement : total
+                        increment : total
                     },
                     portfolio: {
                         updateMany: {
