@@ -31,16 +31,30 @@ if (process.env.DEVELOPMENT){
 let commands = new Collection<String, Command>();
 const cmdPath = path.join(path.resolve(), 'commands');
 const cmdFile = fs.readdirSync(cmdPath).filter((file: string) => file.endsWith('.ts'));
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN as string);
 
-for (const file of cmdFile) {
-    const filePath = "file:///" + path.join(cmdPath, file);
-    const { default: command } = await import(filePath);
-
-    if ('data' in command && 'execute' in command) {
-        console.log(command.data.name);
-        commands.set(command.data.name, command);
-    } else {
-        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+async function reload(){
+    commands.clear();
+    for (const file of cmdFile) {
+        const filePath = "file:///" + path.join(cmdPath, file);
+        const { default: command } = await import(filePath);
+        
+        if ('data' in command && 'execute' in command) {
+            console.log(command.data.name);
+            commands.set(command.data.name, command);
+        } else {
+            console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+        }
+    }
+    try {
+        console.log(`Started refreshing ${commands.size} application (/) commands.`);
+        const data: any = await rest.put(
+            Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string),
+            { body: Array.from(await commands.values()).map((command) => command.data.toJSON()) },
+        );
+        console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -57,7 +71,7 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-            await interaction[interaction.replied ? 'followUp' : 'reply']({ content: 'There was an error while executing this command!', ephemeral: true })
+        await interaction[interaction.replied ? 'followUp' : 'reply']({ content: 'There was an error while executing this command!', ephemeral: true })
     }
 });
 
@@ -69,29 +83,22 @@ client.once(Events.ClientReady, c => {
     readline.question(`>`, q);
 })
 
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN as string);
 
-try {
-    console.log(`Started refreshing ${commands.size} application (/) commands.`);
-    const data: any = await rest.put(
-        Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string),
-        { body: Array.from(await commands.values()).map((command) => command.data.toJSON()) },
-    );
-    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-} catch (error) {
-    console.error(error);
-}
+
 function q(command : string){
-    if (command.toLowerCase().startsWith("exit"))
-        exit(0);
     try {
     var a = command.split(' ', 3)[0];
     var b = command.split(' ', 3)[1];
     var c = command.split(' ', 3)[2];
-    
+    if (a == 'exit'){
+        exit(0);
+    } else if (a=='restart'){
+        return reload().then(()=>{
+            readline.question('>', q);
+        });
+    }
     prisma[b][a](JSON.parse(c)).then((val)=>{console.log(val);readline.question('>', q);}).catch(console.error);
     } catch (e){
-        console.error(e);
         readline.question('>', q);
     }
         
@@ -103,5 +110,5 @@ const readline = createInterface({
     input: process.stdin,
     output: process.stdout,
   })
-
+await reload();
 client.login(process.env.TOKEN);

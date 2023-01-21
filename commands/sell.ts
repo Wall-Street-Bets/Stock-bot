@@ -63,7 +63,7 @@ export default {
                     }
                 }
             });
-            await interaction.followUp(`You have sold ${quantity} shares of ${ticker} for a total of ${total.toPrecision(2)}`);
+            await interaction.followUp(`You have sold ${quantity} shares of ${ticker} for a total of ${total.toFixed(2)}`);
         }
     }
 }

@@ -11,7 +11,7 @@ export default {
                 user_id: interaction.user.id
             }
         });
-
+        
         if (user) {
             return await interaction.followUp("You've already claimed this!");
         }

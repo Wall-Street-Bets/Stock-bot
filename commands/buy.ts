@@ -50,7 +50,7 @@ export default {
                     balance: {
                         decrement : total
                     },
-                    portfolio : user.portfolio.filter((val)=>val.ticker==ticker.toUpperCase()).length > 0 ? {
+                    portfolio : user.portfolio.filter((val)=>val.ticker==ticker.toUpperCase()).length ? {
                         updateMany : {
                             where : {
                                 ticker
@@ -69,7 +69,7 @@ export default {
                     }
                 }
             });
-            await interaction.followUp(`You have bought ${quantity} shares of ${ticker} for a total of ${total.toPrecision(2)}`);
+            await interaction.followUp(`You have bought ${quantity} shares of ${ticker} for a total of ${total.toFixed(2)}`);
         }
     }
 }
