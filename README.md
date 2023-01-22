@@ -121,7 +121,7 @@ This is an example of how to list things you need to use the software and how to
   npm install discord.js dotenv 
   npx prisma generate
   ```
-3.5(Optional).
+3.5 (Optional). 
   ```sh
   npm i nodemon -g 
   ```
