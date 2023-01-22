@@ -38,9 +38,9 @@
     <a href="https://discord.com/api/oauth2/authorize?client_id=1029048069066600521&permissions=8&scope=bot"><strong>Invite the bot to get started »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/Wall-Street-Bets/discord-bot.git/issues">Report Bug</a>
+    <a href="https://github.com/Wall-Street-Bets/Stock-bot.git/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Wall-Street-Bets/discord-bot.git/issues">Request Feature</a>
+    <a href="https://github.com/Wall-Street-Bets/Stock-bot.git/issues">Request Feature</a>
   </p>
 </div>
 
@@ -111,10 +111,10 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-1. Get a free API Key at [https://polygon.io](https://polygon)
+1. Get a free API Key at [https://polygon.io](https://polygon.io)
 2. Clone the repo
   ```sh
-  git clone https://github.com/Wall-Street-Bets/discord-bot.git
+  git clone https://github.com/Wall-Street-Bets/Stock-bot.git
   ```
 3. Install NPM packages and prisma
   ```sh
@@ -154,7 +154,7 @@ This is an example of how to list things you need to use the software and how to
     - [ ] Chinese
     - [ ] Spanish
 
-See the [open issues](https://github.com/Wall-Street-Bets/discord-bot.git/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/Wall-Street-Bets/Stock-bot.git/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -192,7 +192,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Elbert_Ainstein - [@ainstein_elbert](https://twitter.com/ainstein_elbert) - elbert4instein@gmail.com
 
-Project Link: [https://github.com/Wall-Street-Bets/discord-bot.git](https://github.com/Wall-Street-Bets/discord-bot.git)
+Project Link: [https://github.com/Wall-Street-Bets/Stock-bot.git](https://github.com/Wall-Street-Bets/Stock-bot.git)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
