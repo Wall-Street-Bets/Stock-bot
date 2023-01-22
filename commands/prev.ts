@@ -8,7 +8,7 @@ export default {
         .addStringOption(option => option.setName("ticker").setDescription("The stock abbreviation to check").setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
-        let ticker = interaction.options.getString('ticker');
+        let ticker = interaction.options.getString('ticker').toUpperCase();
         let data = (await getData(`https://api.polygon.io/v2/aggs/ticker/${ticker}/prev?apiKey=${process.env.API_KEY}`)).results[0];
         
         let embed = new EmbedBuilder()

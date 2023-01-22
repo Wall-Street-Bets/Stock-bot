@@ -9,6 +9,9 @@ export default {
         const user = await prisma.user.findUnique({
             where: {
                 user_id: interaction.user.id
+            },
+            include: {
+                portfolio: true
             }
         });
 

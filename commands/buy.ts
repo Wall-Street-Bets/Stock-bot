@@ -15,7 +15,7 @@ export default {
                 .setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply();
-        let ticker = interaction.options.getString('ticker');
+        let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
         
         let user = await prisma.user.findUnique({

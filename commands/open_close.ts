@@ -16,7 +16,7 @@ export default {
             .setRequired(true)),
     async execute(interaction : ChatInputCommandInteraction) {
         await interaction.deferReply()
-        const ticker = interaction.options.getString('ticker')
+        const ticker = interaction.options.getString('ticker').toUpperCase()
         var date1 = new Date();
         date1.setTime(date1.getTime()-1000*86400);
         const date = new Date((interaction.options.getString('date')));
@@ -27,12 +27,12 @@ export default {
         let components = [new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 new ButtonBuilder()
-                    .setLabel("Next")
+                    .setLabel("Next Dat")
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId(randomUUID())
                     .setDisabled(date.getTime() >= date1.getTime()),
                 new ButtonBuilder()
-                    .setLabel("Previous")
+                    .setLabel("Previous Day")
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId(randomUUID()))];
         let msg;

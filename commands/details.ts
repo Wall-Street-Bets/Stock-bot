@@ -11,10 +11,25 @@ export default {
             .setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply()
-        const ticker = interaction.options.getString('ticker');
+        const ticker = interaction.options.getString('ticker').toUpperCase();
         let data = await getData(`https://api.polygon.io/v3/reference/tickers/${ticker}?apiKey=${process.env.API_KEY}`);
 
-        function nFormatter(num, digits) {
+        function nFormatterInBillions(num, digits) {
+            const lookup = [
+                { value: 1, symbol: "" },
+                { value: 1e3, symbol: "k" },
+                { value: 1e6, symbol: "M" },
+                { value: 1e9, symbol: "B" }
+                // { value: 1e12, symbol: "T" }
+            ];
+            const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+            var item = lookup.slice().reverse().find(function (item) {
+                return num >= item.value;
+            });
+            return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
+        }
+
+        function nFormatterInTrillions(num, digits) {
             const lookup = [
                 { value: 1, symbol: "" },
                 { value: 1e3, symbol: "k" },
@@ -37,8 +52,8 @@ export default {
                 { name: 'Website', value: `${data.results.homepage_url}` },
                 { name: 'Primary Exchange', value: `${data.results.primary_exchange}`, inline: true },
                 { name: 'Central Index Key', value: `${data.results.cik}`, inline: true },
-                { name: 'Total Employees', value: `${nFormatter(data.results.total_employees, 1)}`, inline: true },
-                { name: 'Market Cap', value: `${nFormatter(data.results.market_cap, 1)}` },
+                { name: 'Total Employees', value: `${nFormatterInBillions(data.results.total_employees, 1)}`, inline: true },
+                { name: 'Market Cap', value: `${nFormatterInBillions(data.results.market_cap, 1)}`  +  `${data.results.market_cap > 1e12 ? ` (${nFormatterInTrillions(data.results.market_cap, 2)})` : ""}` },
             )
             .setColor(0x00AE86)
 

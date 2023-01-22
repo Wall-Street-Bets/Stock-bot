@@ -38,8 +38,11 @@ export default {
                 user.portfolio.map(async (stock) => {
                 let amount = await getStock(stock.ticker);
                 total += stock.amount * amount;
-                return { name: stock.ticker + ": " + stock.amount + 'x ' , value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$` 
-            }
+                return { 
+                    name: stock.ticker + ": " + stock.amount + 'x ' , 
+                    value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$\n **Change Percentage** `, 
+                    inline: true 
+                }
         }))
         nwCache[user.user_id] = user.balance + total;
         //TODO: maybe add the change of owned stock prices
