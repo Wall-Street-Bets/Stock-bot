@@ -201,8 +201,6 @@ Project Link: [https://github.com/Wall-Street-Bets/discord-bot.git](https://gith
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
 * [Discord.js](https://discord.js.org)
 * [Node.js](https://nodejs.org)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
