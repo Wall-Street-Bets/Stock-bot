@@ -190,7 +190,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Elbert_Ainstein - [@your_twitter](https://twitter.com/your_username) - elbert4instein@gmail.com
+Elbert_Ainstein - [@ainstein_elbert](https://twitter.com/ainstein_elbert) - elbert4instein@gmail.com
 
 Project Link: [https://github.com/Wall-Street-Bets/discord-bot.git](https://github.com/Wall-Street-Bets/discord-bot.git)
 
