@@ -121,16 +121,16 @@ This is an example of how to list things you need to use the software and how to
   npm install discord.js dotenv 
   npx prisma generate
   ```
-3.5 (Optional). 
+4. (Optional)
   ```sh
   npm i nodemon -g 
   ```
-4. Enter your Bot Key and API Key in `.env`
+5. Enter your Bot Key and API Key in `.env`
   ```env
   TOKEN="ENTER YOUR TOKEN KEY"
   API_Key="ENTER YOUR API KEY"
   ```
-5. Run the bot!
+6. Run the bot!
   ```sh
   node index.ts
   ``` or
