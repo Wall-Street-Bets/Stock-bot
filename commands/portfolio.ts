@@ -1,7 +1,5 @@
-import { nwCache } from '../utils/utils';
-
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { cache, prisma, getData, getStock } from "../utils/utils";
+import { getStock, nwCache, prisma } from '../utils/utils.js';
 
 export default {
     data: new SlashCommandBuilder()

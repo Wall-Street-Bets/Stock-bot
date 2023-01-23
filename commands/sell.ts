@@ -1,6 +1,6 @@
 //create a sell command for users using prisma
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { getStock, prisma } from '../utils/utils';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { getStock, prisma } from '../utils/utils.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('sell')
@@ -15,7 +15,7 @@ export default {
                 .setRequired(true)),
     async execute(interaction: ChatInputCommandInteraction) {
         await interaction.deferReply();
-        let ticker = interaction.options.getString('ticker');
+        let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
        
         let user = await prisma.user.findUnique({
@@ -36,7 +36,7 @@ export default {
                 ]
             });
         }
-        let stock = user.portfolio.filter((val)=>val.ticker == ticker.toUpperCase());
+        let stock = user.portfolio.filter((val)=>val.ticker == ticker);
         if (!stock || stock[0].amount < quantity) {
             await interaction.followUp({ content: 'You do not have enough shares to sell', ephemeral: true });
         } else {

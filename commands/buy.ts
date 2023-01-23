@@ -1,5 +1,5 @@
 //setup a buy command for user using prisma
-import { getStock, prisma } from '../utils/utils';
+import { getStock, prisma } from '../utils/utils.js';
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 export default {
     data: new SlashCommandBuilder()
@@ -17,16 +17,16 @@ export default {
         await interaction.deferReply();
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
-        
+
         let user = await prisma.user.findUnique({
             where: {
                 user_id: interaction.user.id
             },
-            include : {
+            include: {
                 portfolio: true
             }
         });
-        
+
         if (!user) {
             return await interaction.followUp({
                 embeds: [
@@ -38,7 +38,7 @@ export default {
             });
         }
         let total = await getStock(ticker) * quantity;
-        if (total == 0){
+        if (total == 0) {
             return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
@@ -58,23 +58,23 @@ export default {
                 },
                 data: {
                     balance: {
-                        decrement : total
+                        decrement: total
                     },
-                    portfolio : user.portfolio.filter((val)=>val.ticker==ticker.toUpperCase()).length ? {
-                        updateMany : {
-                            where : {
+                    portfolio: user.portfolio.filter((val) => val.ticker == ticker).length ? {
+                        updateMany: {
+                            where: {
                                 ticker
                             },
-                            data : {
-                                amount : {
-                                    increment : quantity
+                            data: {
+                                amount: {
+                                    increment: quantity
                                 }
                             }
                         }
                     } : {
-                        create : {
+                        create: {
                             ticker,
-                            amount : quantity
+                            amount: quantity
                         }
                     }
                 }

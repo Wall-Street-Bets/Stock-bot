@@ -1,6 +1,5 @@
-import { ChatInputCommandInteraction } from 'discord.js';
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { getData } from "../utils/utils";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { getData } from "../utils/utils.js";
 export default {
     data: new SlashCommandBuilder()
         .setName('market')

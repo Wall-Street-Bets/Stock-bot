@@ -1,15 +1,13 @@
 
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Interaction, Message } from "discord.js";
-
-import { Client, GatewayIntentBits, REST, Routes, Events, Collection } from 'discord.js';
+import { Client, Collection, Events, GatewayIntentBits, Interaction, REST, Routes } from 'discord.js';
 import { config } from "dotenv";
-config();
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
-import { prisma } from "./utils/utils";
-import { createInterface } from "node:readline";
 import { exit } from "node:process";
+import { createInterface } from "node:readline";
+import { prisma } from "./utils/utils.js";
+config();
 
 const client = new Client({
     intents: [
@@ -24,21 +22,21 @@ interface Command {
     data: SlashCommandBuilder;
     execute: (interaction: Interaction) => void
 }
-if (process.env.DEVELOPMENT){
+if (process.env.DEVELOPMENT) {
     await prisma.stock.deleteMany({});
     await prisma.user.deleteMany({});
 }
 let commands = new Collection<String, Command>();
-const cmdPath = path.join(path.resolve(), 'commands');
-const cmdFile = fs.readdirSync(cmdPath).filter((file: string) => file.endsWith('.ts'));
+const cmdPath = path.join(path.resolve(), 'commands'); // Get the folder of commands
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN as string);
+async function reload() {
 
-async function reload(){
+    const cmdFile = (await fs.readdir(cmdPath)).filter((file: string) => file.endsWith('.ts')); // Get the list of command files
     commands.clear();
     for (const file of cmdFile) {
         const filePath = "file:///" + path.join(cmdPath, file);
         const { default: command } = await import(filePath);
-        
+
         if ('data' in command && 'execute' in command) {
             console.log(command.data.name);
             commands.set(command.data.name, command);
@@ -79,36 +77,48 @@ client.once(Events.ClientReady, c => {
     console.log(`------ WALL STREET BOT ------`);
     console.log(`Tag: ${c.user.tag}`);
     console.log(`ID: ${c.user.id}`);
-    
+
     readline.question(`>`, q);
 })
 
 
 
-function q(command : string){
-    try {
-    var a = command.split(' ', 3)[0];
-    var b = command.split(' ', 3)[1];
-    var c = command.split(' ', 3)[2];
-    if (a == 'exit'){
-        exit(0);
-    } else if (a=='restart'){
-        return reload().then(()=>{
-            readline.question('>', q);
-        });
-    }
-    prisma[b][a](JSON.parse(c)).then((val)=>{console.log(val);readline.question('>', q);}).catch(console.error);
-    } catch (e){
-        readline.question('>', q);
-    }
-        
-        
+async function q(val: string) {
 
-    
+    try {
+        if (val == 'exit') {
+            exit(0);
+        }
+        else if (val == 'reload') {
+            await reload();
+
+        } else {
+            let strings = val.split(" ");
+            let value: string = strings.pop() as string;
+            try {
+                let obj2 = JSON.parse(value);
+                let obj: any = prisma;
+                while (strings.length) {
+                    obj = obj[strings.shift() as string];
+                }
+                console.log(await obj(obj2))
+            } catch {
+                strings.push(value);
+                var obj: any = prisma;
+                while (strings.length) {
+                    obj = obj[strings.shift() as string];
+                }
+                console.log(obj);
+            }
+        }
+    } catch (e) {
+        console.error(e)
+    }
+    readline.question("> ", q);
 }
 const readline = createInterface({
     input: process.stdin,
     output: process.stdout,
-  })
+})
 await reload();
 client.login(process.env.TOKEN);

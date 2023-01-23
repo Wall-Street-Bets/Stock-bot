@@ -1,5 +1,5 @@
-import { prisma } from '../utils/utils';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { prisma } from '../utils/utils.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('start')

@@ -11,20 +11,20 @@ datasource db {
 }
 
 model Stock {
-  id String @default(uuid()) @id @map("_id")
-  ticker String 
-  createdAt DateTime @default(now())
-  editedAt DateTime @updatedAt
-  amount Int
-  user User @relation(references: [id], fields: [userId])
-  userId String
+  id        String   @id @default(uuid()) @map("_id") // The ID of the database entry
+  ticker    String // The ticker of the stock entry
+  createdAt DateTime @default(now()) // The time of creation
+  editedAt  DateTime @updatedAt // The last time of updating
+  amount    Int // The quantity of the stock
+  user      User     @relation(references: [id], fields: [userId]) // The user which this stock belongs to
+  userId    String // The ID of the user this stock belongs to
 }
 
 model User {
-  id String @default(uuid()) @id @map("_id")
-  user_id String @unique
-  createdAt DateTime @default(now())
-  editedAt DateTime @updatedAt
-  balance Float @default(5000)
-  portfolio Stock[] 
+  id        String   @id @default(uuid()) @map("_id") // The ID of this database entry
+  user_id   String   @unique // The ID of the Discord User
+  createdAt DateTime @default(now()) // The time of creation
+  editedAt  DateTime @updatedAt // The last time of updating
+  balance   Float    @default(5000) // The balance of the player in cash
+  portfolio Stock[] // The stocks that the player owns
 }

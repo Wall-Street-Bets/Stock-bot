@@ -5,6 +5,6 @@ export default {
         .setName("donate")
         .setDescription("Donate to us!"),
     async execute(interaction : ChatInputCommandInteraction){
-        await interaction.reply("Lol give us mone")
+        await interaction.reply("Lol give us money")
     }
 }

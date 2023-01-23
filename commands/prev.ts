@@ -1,6 +1,5 @@
-import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, ComponentType, ButtonStyle } from 'discord.js';
-import { getData } from '../utils/utils';
-import { randomUUID } from 'crypto';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { getData } from '../utils/utils.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('prev')

@@ -1,5 +1,5 @@
-import { prisma } from '../utils/utils';
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js"
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { prisma } from '../utils/utils.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('delete')
@@ -9,9 +9,6 @@ export default {
         const user = await prisma.user.findUnique({
             where: {
                 user_id: interaction.user.id
-            },
-            include: {
-                portfolio: true
             }
         });
 
