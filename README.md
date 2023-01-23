@@ -118,24 +118,19 @@ This is an example of how to list things you need to use the software and how to
   ```
 3. Install NPM packages and prisma
   ```sh
-  npm install discord.js dotenv 
+  npm install
   npx prisma generate
   ```
-4. (Optional)
-  ```sh
-  npm i nodemon -g 
-  ```
-5. Enter your Bot Key and API Key in `.env`
+4. Enter your Bot Key and API Key in `.env`
   ```env
   TOKEN="ENTER YOUR TOKEN KEY"
-  API_Key="ENTER YOUR API KEY"
+  API_KEY="ENTER YOUR API KEY"
+  DATABASE_URL="ENTER YOUR MONGODB URL"
+  CLIENT_ID="ENTER THE ID OF THE BOT"
   ```
 6. Run the bot!
   ```sh
-  node index.ts
-  ``` or
-  ```sh
-  nodemon
+  npm run stsart
   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
