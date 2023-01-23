@@ -90,6 +90,7 @@ Use the `README.md` to get started.
 
 * Discord.js
 * Node.js
+* Prisma
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -127,6 +128,11 @@ This is an example of how to list things you need to use the software and how to
   API_KEY="ENTER YOUR API KEY"
   DATABASE_URL="ENTER YOUR MONGODB URL"
   CLIENT_ID="ENTER THE ID OF THE BOT"
+  # GUILD_ID="ENTER THE GUILD ID OF THE BOT IF YOU ONLY NEED IT TO RUN IN ONE GUILD"
+  ```
+5. Push to the DB!
+  ```sh
+  npx prisma db push
   ```
 6. Run the bot!
   ```sh
