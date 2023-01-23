@@ -27,7 +27,7 @@ export default {
         let components = [new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 new ButtonBuilder()
-                    .setLabel("Next Dat")
+                    .setLabel("Next Day")
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId(randomUUID())
                     .setDisabled(date.getTime() >= date1.getTime()),
