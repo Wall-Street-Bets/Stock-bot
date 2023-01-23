@@ -49,7 +49,7 @@ async function reload(){
     try {
         console.log(`Started refreshing ${commands.size} application (/) commands.`);
         const data: any = await rest.put(
-            Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string),
+            (process.env.GUILD_ID as any) ? Routes.applicationGuildCommands(process.env.CLIENT_ID as string, process.env.GUILD_ID as string) : Routes.applicationCommands(process.env.CLIENT_ID as string),
             { body: Array.from(await commands.values()).map((command) => command.data.toJSON()) },
         );
         console.log(`Successfully reloaded ${data.length} application (/) commands.`);
