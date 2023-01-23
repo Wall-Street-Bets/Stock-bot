@@ -192,6 +192,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Elbert_Ainstein - [@ainstein_elbert](https://twitter.com/ainstein_elbert) - elbert4instein@gmail.com
+
 pennacap        - [@PennaCap](https://twitter.com/PennaCap)
 
 Project Link: [https://github.com/Wall-Street-Bets/Stock-bot.git](https://github.com/Wall-Street-Bets/Stock-bot.git)
