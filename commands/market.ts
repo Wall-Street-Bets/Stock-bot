@@ -34,7 +34,6 @@ export default {
                 ]});
                 break;
             case 'holidays':
-                console.log(interaction.options.getString('exchange'));
                 await interaction.reply({
                     embeds: [new EmbedBuilder()
                         .setTitle('Upcoming Holidays')

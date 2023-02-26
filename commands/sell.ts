@@ -57,7 +57,8 @@ export default {
                             data : {
                                 amount : {
                                     decrement : quantity
-                                }
+                                },
+                                currentPrice: await getStock(ticker)
                             }
                         }
                     }

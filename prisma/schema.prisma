@@ -11,13 +11,15 @@ datasource db {
 }
 
 model Stock {
-  id        String   @id @default(uuid()) @map("_id") // The ID of the database entry
-  ticker    String // The ticker of the stock entry
-  createdAt DateTime @default(now()) // The time of creation
-  editedAt  DateTime @updatedAt // The last time of updating
-  amount    Int // The quantity of the stock
-  user      User     @relation(references: [id], fields: [userId]) // The user which this stock belongs to
-  userId    String // The ID of the user this stock belongs to
+  id           String   @id @default(uuid()) @map("_id") // The ID of the database entry
+  ticker       String // The ticker of the stock entry
+  createdAt    DateTime @default(now()) // The time of creation
+  editedAt     DateTime @updatedAt // The last time of updating
+  amount       Int // The quantity of the stock
+  user         User     @relation(references: [id], fields: [userId]) // The user which this stock belongs to
+  userId       String // The ID of the user this stock belongs to
+  crypto       Boolean  @default(false) // Whether this stock is a crypto or not
+  currentPrice Float // The current price of the stock
 }
 
 model User {

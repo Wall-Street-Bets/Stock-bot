@@ -13,17 +13,23 @@ export default {
         .addStringOption(option => option
             .setName('date')
             .setDescription('The date for the stock info (yyyy-mm-dd) eg.2023-01-18')
-            .setRequired(true)),
+            .setRequired(true))
+        .addBooleanOption(option => option
+            .setName('crypto')
+            .setDescription('Is this a crypto?')
+            .setRequired(false)),
+
     async execute(interaction : ChatInputCommandInteraction) {
         await interaction.deferReply()
         const ticker = interaction.options.getString('ticker').toUpperCase()
+        const crypto = interaction.options.getBoolean('crypto') || false
         var date1 = new Date();
         date1.setTime(date1.getTime()-1000*86400);
         const date = new Date((interaction.options.getString('date')));
         if (date.getTime() > date1.getTime()){
             return await interaction.reply("We're not a fortune teller, go to hell (P.S. you can only get yesterday's or older's stock prices, so well suck it)\n\nCustomer satisfaction on top");
         }
-        let data = await getData(`https://api.polygon.io/v1/open-close/${ticker}/${date.toISOString().split('T')[0]}?adjusted=true&apiKey=${process.env.API_KEY}`);
+        let data = await getData(`https://api.polygon.io/v1/open-close/${crypto?'X:'+ticker+'USD':ticker}/${date.toISOString().split('T')[0]}?adjusted=true&apiKey=${process.env.API_KEY}`);
         let components = [new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
                 new ButtonBuilder()
@@ -50,8 +56,8 @@ export default {
                     componentType: ComponentType.Button,
                     time: 60000
                 });
-                date.setTime(date.getTime() + (86400000 * (i.component.label == 'Next' ? 1 : -1)));
-                let data = await getData(`https://api.polygon.io/v1/open-close/${ticker}/${date.toISOString().split('T')[0]}?adjusted=true&apiKey=${process.env.API_KEY}`);
+                date.setTime(date.getTime() + (86400000 * (i.component.label == 'Next Day' ? 1 : -1)));
+                let data = await getData(`https://api.polygon.io/v1/open-close/${crypto?'X:'+ticker+'USD':ticker}/${date.toISOString().split('T')[0]}?adjusted=true&apiKey=${process.env.API_KEY}`);
                 components[0].components[0].setDisabled(date.getTime() >= date1.getTime());
                 components[0].components[1].setDisabled(data.status != 'OK');
                 

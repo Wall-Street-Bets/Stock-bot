@@ -36,14 +36,23 @@ export default {
                 user.portfolio.map(async (stock) => {
                 let amount = await getStock(stock.ticker);
                 total += stock.amount * amount;
+                if (amount != stock.currentPrice) {
+                    prisma.stock.update({
+                        where: {
+                            id: stock.id
+                        },
+                        data: {
+                            currentPrice: amount
+                        }
+                    })
+                }
                 return { 
                     name: stock.ticker + ": " + stock.amount + 'x ' , 
-                    value: `**Worth: ** ${(amount * stock.amount).toFixed(2)}$\n **Change Percentage** `, 
+                    value: `**Worth: ** ${(stock.currentPrice * stock.amount).toFixed(2)}$ → ${(amount * stock.amount).toFixed(2)}$`, 
                     inline: true 
                 }
         }))
         nwCache[user.user_id] = user.balance + total;
-        //TODO: maybe add the change of owned stock prices
         await interaction.followUp({
             embeds:
                 [

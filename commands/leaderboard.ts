@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { nwCache } from '../utils/utils.js';
+import { nwCache } from './../utils';
 export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
@@ -9,16 +9,17 @@ export default {
         await interaction.deferReply();
         const fields = Object.entries(nwCache).sort((a: any, b: any) => b[1] - a[1]).map((a, i) => "`" + (i + 1) + ".` <@" + a[0] + ">" + ": **" + a[1] + "$**");
         let totalList = [[]];
+        
         while (fields.length) {
+            
             while (totalList[totalList.length - 1].join('\n').length < 4096) {
-                if (!fields.length) {
+                if (!fields.length){
                     break;
                 }
                 totalList[totalList.length - 1].push(fields.shift());
             }
-            totalList.push([]);
-            if (totalList[totalList.length - 2].join('\n').length > 4096) {
-                totalList[totalList.length - 1].push(totalList[totalList.length - 2].pop());
+            if (totalList[totalList.length - 1].join('\n').length > 4096) {
+                totalList.push([totalList[totalList.length - 1].pop()]);
             }
         }
         if (!totalList[totalList.length - 1].length && totalList.length - 1) {
@@ -31,13 +32,15 @@ export default {
                     .setLabel("Next Page")
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId(randomUUID())
-                    .setDisabled(!(index + 1 < totalList.length)),
+                    .setDisabled(index + 1 >= totalList.length),
                 new ButtonBuilder()
                     .setLabel("Previous Page")
                     .setStyle(ButtonStyle.Primary)
                     .setCustomId(randomUUID())
-                    .setDisabled(!(index > 0)))
+                    .setDisabled(!index)
+            )
         ];
+        console.log(totalList[index].join('\n').indexOf('`67.`')+5 + '\n' + totalList[index].join('\n').length);
         const msg = await interaction.followUp({
             embeds: [
                 new EmbedBuilder()
@@ -53,7 +56,7 @@ export default {
                     componentType: ComponentType.Button,
                     time: 60000
                 });
-                index += (i.component.label == 'Next' ? 1 : -1);
+                index += (i.component.label == 'Next Page' ? 1 : -1);
                 components[0].components[0].setDisabled(index + 1 < totalList.length);
                 components[0].components[1].setDisabled(index > 0);
                 

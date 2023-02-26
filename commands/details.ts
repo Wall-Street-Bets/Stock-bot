@@ -13,7 +13,9 @@ export default {
         await interaction.deferReply()
         const ticker = interaction.options.getString('ticker').toUpperCase();
         let data = await getData(`https://api.polygon.io/v3/reference/tickers/${ticker}?apiKey=${process.env.API_KEY}`);
-
+        if(data.status !='OK')
+            return await interaction.followUp("Does the stock exist?")
+        
         function nFormatter(num, digits, maxTill=1e12) {
             const lookup = [
                 { value: 1, symbol: "" },
@@ -23,7 +25,7 @@ export default {
                 { value: 1e12, symbol: "T" }
             ];
             const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-            var item = lookup.slice().reverse().find(function (item) {
+            var item = lookup.reverse().find(function (item) {
                 return num >= item.value && maxTill >= item.value;
             });
             return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : "0";
