@@ -1,6 +1,6 @@
 //setup a buy command for user using prisma
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { getStock, prisma } from '../../utils/utils.js';
+import { getStock, prisma } from '../utils/utils.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('buy')
@@ -69,8 +69,8 @@ export default {
                                 amount: {
                                     increment: quantity
                                 },
-                                currentPrice: await getStock(ticker)
-                            }
+                                currentPrice: await getStock(ticker) 
+                            },
                         }
                     } : {
                         create: {

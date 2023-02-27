@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, ComponentType, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
-import { nwCache } from './../utils';
+import { nwCache } from '../utils/utils.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
