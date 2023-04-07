@@ -38,7 +38,14 @@ export default {
             });
         }
         let total = await getStock(ticker) * quantity;
-        if (total == 0) {
+        if (quantity == 0) {
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Is ")
+                ]
+            })
+        } else if (total == 0) {
             return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
@@ -49,7 +56,7 @@ export default {
             });
         }
         if (user.balance < total) {
-            await interaction.followUp({ content: 'You do not have enough money to buy this stock', ephemeral: true });
+            await interaction.followUp({ content: 'You do not have enough money to buy this amount of stock', ephemeral: true });
         }
         else {
             await prisma.user.update({
