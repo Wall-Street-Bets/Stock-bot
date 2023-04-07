@@ -9,6 +9,10 @@ export default {
             option.setName('ticker')
                 .setDescription('The ticker of the stock')
                 .setRequired(true))
+        .addStringOption((option) =>
+            option.setName('Buy in Price')
+                .setDescription('The price you are buying in')
+                .setRequired(true))
         .addIntegerOption(option =>
             option.setName('quantity')
                 .setDescription('The quantity of the stock')
@@ -17,6 +21,11 @@ export default {
         await interaction.deferReply();
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
+
+        let buyInPriceStr = interaction.options.getString('Buy in Price')
+        let buyInPrice: number = +buyInPriceStr
+
+        let total = await getStock(ticker) * quantity;
 
         let user = await prisma.user.findUnique({
             where: {
@@ -37,12 +46,13 @@ export default {
                 ]
             });
         }
-        let total = await getStock(ticker) * quantity;
         if (quantity == 0) {
             return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle("Is ")
+                        .setTitle("Did you actually buy the stock?")
+                        .setDescription("Check if you bought 0 stocks! (0 in quantity)")
+                        .setColor('Red')
                 ]
             })
         } else if (total == 0) {
@@ -51,6 +61,15 @@ export default {
                     new EmbedBuilder()
                         .setTitle("Is the stock real?")
                         .setDescription("Check that the stock is real or if the quantity is 0!")
+                        .setColor('Red')
+                ]
+            });
+        } else if (buyInPrice <= total) {
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Buy in Price")
+                        .setDescription("Check if the price of buying in is greater than the current stock price!")
                         .setColor('Red')
                 ]
             });

@@ -16,6 +16,7 @@ export default {
         await interaction.deferReply();
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let data = (await (await fetch(`https://api.polygon.io/v2/aggs/ticker/${ticker}/range/15/minute/${+(new Date()) - 86400000 * 14}/${+(new Date())}?apiKey=${process.env.API_KEY}`)).json()).results;
+        console.log(data)
         if (!data) {
             return await interaction.followUp({ embeds: [new EmbedBuilder().setTitle('Error finding Stock').setDescription('Does the stock exist?').setColor(0xFF0000)] });
         }
@@ -26,7 +27,7 @@ export default {
             .setImage("attachment://chart.png")
         await interaction.followUp({
             embeds: [embed], files: [{
-                attachment: new ChartJSNodeCanvas({ width: 400, height: 400, backgroundColour: 'white' }).renderToStream({
+                attachment: new ChartJSNodeCanvas({ width: 800, height: 400, backgroundColour: 'white' }).renderToStream({
                     type: 'line',
                     data: {
                         labels: data.map(d => new Date(d.t).toLocaleDateString()),
