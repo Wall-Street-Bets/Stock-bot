@@ -20,7 +20,7 @@ export default {
             embeds: [
                 new EmbedBuilder()
                     .setTitle("Amount Deposited!")
-                    .setDescription("Your loan at **WSB Ltd.** was accepted. 5000$ has been deposited in your account.")
+                    .setDescription("Your loan at **WSB Ltd.** was accepted. 100000$ has been deposited in your account.")
                     .setColor('Green')
             ]
         })

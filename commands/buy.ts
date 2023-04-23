@@ -66,16 +66,19 @@ export default {
                 ]
             });
         } else if (buyInPrice <= total) {
+            const current = await getStock(ticker);
             return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
                         .setTitle("Buy in Price")
-                        .setDescription("Check if the price of buying in is greater than the current stock price!")
+                        .setDescription(`Check if the price of buying in is greater than the current stock price! \n
+                        current stock price for ${ticker}: **${current.toFixed(2)}** \n
+                        `)
                         .setColor('Red')
                 ]
             });
         }
-        if (user.balance < total) {
+        if (user.balance < buyInPrice) {
             await interaction.followUp({ content: 'You do not have enough money to buy this amount of stock', ephemeral: true });
         }
         else {
