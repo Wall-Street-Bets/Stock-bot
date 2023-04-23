@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+
 export async function getData(url : string) {
     const res = await fetch(url, {
         method: 'GET',
@@ -8,6 +9,7 @@ export async function getData(url : string) {
     });
     return res.json();
 }
+
 export async function getStock(ticker : string) {
     ticker = ticker.toUpperCase();
     if (cache[ticker] && cache[ticker].lastUpdated - new Date().getTime() < 300000) {
@@ -21,6 +23,7 @@ export async function getStock(ticker : string) {
         return cache[ticker].value
     }
 }
+
 export let cache = {}
 export let nwCache = {}
 export let prisma : PrismaClient = new PrismaClient(); 
