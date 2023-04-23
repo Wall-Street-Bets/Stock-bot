@@ -10,7 +10,7 @@ export default {
                 .setDescription('The ticker of the stock')
                 .setRequired(true))
         .addStringOption((option) =>
-            option.setName('Buy in Price')
+            option.setName('price')
                 .setDescription('The price you are buying in')
                 .setRequired(true))
         .addIntegerOption(option =>
@@ -22,7 +22,7 @@ export default {
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
 
-        let buyInPriceStr = interaction.options.getString('Buy in Price')
+        let buyInPriceStr = interaction.options.getString('price')
         let buyInPrice: number = +buyInPriceStr
 
         let total = await getStock(ticker) * quantity;
