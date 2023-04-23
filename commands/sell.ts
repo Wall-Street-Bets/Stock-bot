@@ -41,13 +41,14 @@ export default {
             await interaction.followUp({ content: 'You do not have enough shares to sell', ephemeral: true });
         } else {
             let total = await getStock(ticker) * quantity;
+            const transactionFee = total * 0.001;
             await prisma.user.update({
                 where: {
                     user_id: interaction.user.id
                 },
                 data: {
                     balance: {
-                        increment : total
+                        increment : total - transactionFee
                     },
                     portfolio: {
                         updateMany: {

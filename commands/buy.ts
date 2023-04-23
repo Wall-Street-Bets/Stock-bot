@@ -27,6 +27,7 @@ export default {
         let buyInPrice: number = +buyInPriceStr
 
         let total = await getStock(ticker) * quantity;
+        const transactionFee = total * 0.001;
 
         let user = await prisma.user.findUnique({
             where: {
@@ -65,14 +66,16 @@ export default {
                         .setColor('Red')
                 ]
             });
-        } else if (buyInPrice <= total) {
+        } else if (buyInPrice * quantity <= total + transactionFee) {
             const current = await getStock(ticker);
+            console.log(total + " " + buyInPrice*quantity + " " + current)
             return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
                         .setTitle("Buy in Price")
                         .setDescription(`Check if the price of buying in is greater than the current stock price! \n
-                        current stock price for ${ticker}: **${current.toFixed(2)}** \n
+                        Current stock price for ${ticker}: **${current.toFixed(2)}** \n
+                        Your Buy In Price: **${buyInPrice.toFixed(2)}** \n
                         `)
                         .setColor('Red')
                 ]
@@ -88,7 +91,7 @@ export default {
                 },
                 data: {
                     balance: {
-                        decrement: total
+                        decrement: total + transactionFee
                     },
                     portfolio: user.portfolio.filter((val) => val.ticker == ticker).length ? {
                         updateMany: {
