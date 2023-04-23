@@ -9,6 +9,10 @@ export default {
             option.setName('ticker')
                 .setDescription('The ticker of the stock')
                 .setRequired(true))
+        .addStringOption((option) =>
+            option.setName('Buy in Price')
+                .setDescription('The price you are buying in')
+                .setRequired(true))
         .addIntegerOption(option =>
             option.setName('quantity')
                 .setDescription('The quantity of the stock')
@@ -17,6 +21,11 @@ export default {
         await interaction.deferReply();
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
+
+        let buyInPriceStr = interaction.options.getString('Buy in Price')
+        let buyInPrice: number = +buyInPriceStr
+
+        let total = await getStock(ticker) * quantity;
 
         let user = await prisma.user.findUnique({
             where: {
@@ -37,8 +46,16 @@ export default {
                 ]
             });
         }
-        let total = await getStock(ticker) * quantity;
-        if (total == 0) {
+        if (quantity == 0) {
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Did you actually buy the stock?")
+                        .setDescription("Check if you bought 0 stocks! (0 in quantity)")
+                        .setColor('Red')
+                ]
+            })
+        } else if (total == 0) {
             return await interaction.followUp({
                 embeds: [
                     new EmbedBuilder()
@@ -47,9 +64,18 @@ export default {
                         .setColor('Red')
                 ]
             });
+        } else if (buyInPrice <= total) {
+            return await interaction.followUp({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle("Buy in Price")
+                        .setDescription("Check if the price of buying in is greater than the current stock price!")
+                        .setColor('Red')
+                ]
+            });
         }
         if (user.balance < total) {
-            await interaction.followUp({ content: 'You do not have enough money to buy this stock', ephemeral: true });
+            await interaction.followUp({ content: 'You do not have enough money to buy this amount of stock', ephemeral: true });
         }
         else {
             await prisma.user.update({
@@ -69,8 +95,8 @@ export default {
                                 amount: {
                                     increment: quantity
                                 },
-                                currentPrice: await getStock(ticker)
-                            }
+                                currentPrice: await getStock(ticker) 
+                            },
                         }
                     } : {
                         create: {

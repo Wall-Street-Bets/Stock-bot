@@ -69,7 +69,11 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        await interaction[interaction.replied ? 'followUp' : 'reply']({ content: 'There was an error while executing this command!', ephemeral: true })
+        try {
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        catch(error) {
+            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
     }
 });
 
