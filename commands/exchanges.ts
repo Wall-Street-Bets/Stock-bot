@@ -11,7 +11,7 @@ export default {
         .addStringOption(option => {
             return option.setName('exchange').setDescription('The exchange to show info of').addChoices(...data.map(val => ({ name: val.name, value: val.id.toString() })))
         }),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         let index = 0;
         const components = [new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder().setCustomId(randomUUID()).setLabel("Next Page").setDisabled(data.length >= ((index+1) * 25)).setStyle(ButtonStyle.Primary),

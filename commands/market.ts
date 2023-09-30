@@ -23,7 +23,7 @@ export default {
                     { name: 'NASDAQ', value: 'nasdaq' },
                     { name: 'New York Stock Exchange (NYSE)', value: 'nyse' }
                 ))),
-    async execute(interaction : ChatInputCommandInteraction) {
+    async execute(interaction) {
         switch (interaction.options.getSubcommand()) {
             case 'status':
                 const data = await getData(`https://api.polygon.io/v1/marketstatus/now?apiKey=${process.env.API_KEY}`)

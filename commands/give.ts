@@ -6,7 +6,7 @@ export default {
         .setName('give')
         .setDescription('Temp command').addIntegerOption(option => option.setName('amount').setDescription("The amount of stonks").setRequired(true)).addStringOption(option => option.setName('ticker').setDescription("The type of stonks").setRequired(true)),
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
         let user = await prisma.user.findUnique({
             where: { user_id: interaction.user.id }, include: {

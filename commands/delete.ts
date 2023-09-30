@@ -4,7 +4,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('delete')
         .setDescription("Delete your account (don't worry you can start a new one)"),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
         const user = await prisma.user.findUnique({
             where: {

@@ -20,7 +20,7 @@ export default {
             .setDescription('Is this a crypto?')
             .setRequired(false)
         ),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         const ticker = interaction.options.getString('ticker').toUpperCase();
         const amount = interaction.options.getNumber('amount');
         const crypto = interaction.options.getBoolean('crypto');

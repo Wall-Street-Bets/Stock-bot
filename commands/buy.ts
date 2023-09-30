@@ -18,8 +18,9 @@ export default {
             option.setName('quantity')
                 .setDescription('The quantity of the stock')
                 .setRequired(true)),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
+        
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let quantity = interaction.options.getInteger('quantity');
 

@@ -1,6 +1,4 @@
-
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { Client, Collection, Events, GatewayIntentBits, Interaction, REST, Routes } from 'discord.js';
+import { Client, Collection, Events, GatewayIntentBits, Interaction, REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { config } from "dotenv";
 import fs from 'node:fs/promises';
 import path from 'node:path';

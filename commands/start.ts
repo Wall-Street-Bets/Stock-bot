@@ -4,7 +4,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('start')
         .setDescription('Get your starting money and start trading!'),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
         try {
             await prisma.user.create({

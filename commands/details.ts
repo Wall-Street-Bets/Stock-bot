@@ -9,7 +9,7 @@ export default {
             .setName('ticker')
             .setDescription('The ticker that you want to check')
             .setRequired(true)),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply()
         const ticker = interaction.options.getString('ticker').toUpperCase();
         let data = await getData(`https://api.polygon.io/v3/reference/tickers/${ticker}?apiKey=${process.env.API_KEY}`);

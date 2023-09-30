@@ -6,7 +6,7 @@ export default {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescription('Lists the top 25 users'),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
         const fields = Object.entries(nwCache).sort((a: any, b: any) => b[1] - a[1]).map((a, i) => "`" + (i + 1) + ".` <@" + a[0] + ">" + ": **" + a[1] + "$**");
         let totalList = [[]];

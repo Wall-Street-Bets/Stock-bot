@@ -9,7 +9,7 @@ export default {
             .setName("user")
             .setDescription("The user who's portfolio you're checking")
             .setRequired(false)),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
 
         const user = await prisma.user.findUnique({

@@ -12,7 +12,7 @@ export default {
                 .setDescription('The ticker of the stock')
                 .setRequired(true)),
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply();
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let data = (await (await fetch(`https://api.polygon.io/v2/aggs/ticker/${ticker}/range/15/minute/${+(new Date()) - 86400000 * 14}/${+(new Date())}?apiKey=${process.env.API_KEY}`)).json()).results;

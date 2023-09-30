@@ -7,7 +7,7 @@ export default {
         .addStringOption(option => option.setName("ticker").setDescription("The stock abbreviation to check").setRequired(true))
         .addBooleanOption(option => option.setName("crypto").setDescription("Is this a crypto?").setRequired(false))
         ,
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction) {
         await interaction.deferReply()
         let ticker = interaction.options.getString('ticker').toUpperCase();
         let crypto = interaction.options.getBoolean('crypto') || false;
